@@ -33,7 +33,7 @@ body{font-family:'Source Serif 4',Georgia,serif;background:var(--paper);color:va
 .stats-bar{background:var(--card);border-bottom:1px solid var(--border);padding:.8rem 1.5rem;display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:center;justify-content:center}
 .st{text-align:center;min-width:70px}
 .st-n{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;line-height:1;color:var(--dark)}
-.st-n.c-del{color:var(--del)}.st-n.c-rep{color:var(--rep)}.st-n.c-mix{color:var(--mix)}
+.st-n.c-ok{color:#2d6a2d}.st-n.c-del{color:var(--del)}.st-n.c-rep{color:var(--rep)}.st-n.c-mix{color:var(--mix)}
 .st-l{font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;color:#7a6a52;margin-top:2px}
 .sdiv{width:1px;height:36px;background:var(--border);align-self:center}
 
@@ -377,16 +377,13 @@ mark{background:#ffe8a0;border-radius:2px;padding:0 1px}
   <div class="st"><div class="st-n" id="sSO">—</div><div class="st-l">речень оригінал</div></div>
   <div class="st"><div class="st-n" id="sSA">—</div><div class="st-l">речень адаптація</div></div>
   <div class="sdiv"></div>
+  <div class="st"><div class="st-n c-ok" id="sNoChange">—</div><div class="st-l">без змін <span id="sNoChangePct" style="font-size:0.6rem">(—%)</span></div></div>
   <div class="st"><div class="st-n c-del" id="sDel">—</div><div class="st-l">вилучено <span id="sDelPct" style="font-size:0.6rem">(—%)</span></div></div>
   <div class="st"><div class="st-n c-rep" id="sRep">—</div><div class="st-l">замінено <span id="sRepPct" style="font-size:0.6rem">(—%)</span></div></div>
   <div class="st"><div class="st-n c-mix" id="sMix">—</div><div class="st-l">змішані <span id="sMixPct" style="font-size:0.6rem">(—%)</span></div></div>
   <div class="sdiv"></div>
   <div class="st"><div class="st-n" id="sCompress">—</div><div class="st-l">стиснення</div></div>
   <div class="sdiv"></div>
-  <button class="quiz-entry-card" onclick="switchToQuiz()">
-    <span class="quiz-entry-icon">📝</span>
-    <span class="quiz-entry-text"><span class="quiz-entry-label">Перевір себе</span><span class="quiz-entry-title">Тест</span></span>
-  </button>
 </div>
 
 <div class="legend">
@@ -402,6 +399,11 @@ mark{background:#ffe8a0;border-radius:2px;padding:0 1px}
   <button class="tb active" data-tab="comp">🔍 Порівняння</button>
   <button class="tb" data-tab="glos">📚 Словник вилучених словоформ</button>
   <button class="tb" data-tab="troph">💬 Тропи та фразеологізми</button>
+  <div style="margin-left:auto"></div>
+  <button class="quiz-entry-card" onclick="switchToQuiz()">
+    <span class="quiz-entry-icon">📝</span>
+    <span class="quiz-entry-text"><span class="quiz-entry-label">Перевір себе</span><span class="quiz-entry-title">Тест</span></span>
+  </button>
 </nav>
 
 <main class="main">
@@ -533,10 +535,12 @@ function hl(s, q) { if (!q || !s) return esc(s); return esc(s).replace(new RegEx
 
 function buildStats() {
   const STATS = {
-    rodyna: { ow:1503, aw:1024, os:247, as2:188, del:49, rep:19, mix:10, compress:32,
-              pDel:'33,6%', pRep:'13%', pMix:'6,8%' },
-    svit:   { ow:985,  aw:697,  os:86,  as2:71,  del:25, rep:15, mix:13, compress:29,
-              pDel:'33.8%', pRep:'21.6%', pMix:'17.6%' }
+    rodyna: { ow:1503, aw:1024, os:247, as2:188,
+              noChange:68, del:49, rep:19, mix:10, compress:32,
+              pNoChange:'46,6%', pDel:'33,6%', pRep:'13,0%', pMix:'6,8%' },
+    svit:   { ow:985,  aw:697,  os:86,  as2:71,
+              noChange:20, del:25, rep:16, mix:13, compress:29,
+              pNoChange:'27,0%', pDel:'33,8%', pRep:'21,6%', pMix:'17,6%' }
   };
   const s = STATS[currentFragment];
 
@@ -544,6 +548,8 @@ function buildStats() {
   document.getElementById('sWA').textContent = s.aw;
   document.getElementById('sSO').textContent = s.os;
   document.getElementById('sSA').textContent = s.as2;
+  document.getElementById('sNoChange').textContent = s.noChange;
+  document.getElementById('sNoChangePct').textContent = '(' + s.pNoChange + ')';
   document.getElementById('sDel').textContent = s.del;
   document.getElementById('sDelPct').textContent = '(' + s.pDel + ')';
   document.getElementById('sRep').textContent = s.rep;
